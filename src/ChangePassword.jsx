@@ -1,31 +1,31 @@
-import React, { useState } from "react";
-import { Redirect } from "react-router-dom";
-import { toast } from "react-toastify";
-import { useAuth } from "./contexts/AuthProvider";
-import DashboardWindow from "./DashboardWindow";
+import React, { useState } from 'react';
+import { Redirect } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { useAuth } from './contexts/AuthProvider';
+import DashboardWindow from './DashboardWindow';
 
 export default function ChangePassword() {
   const { currentUser, updatePassword } = useAuth();
-  const [pass1, setPass1] = useState("");
-  const [pass2, setPass2] = useState("");
+  const [pass1, setPass1] = useState('');
+  const [pass2, setPass2] = useState('');
 
   function handlePass() {
     if (pass1 !== pass2) {
-      return toast.error("Password tidak sama");
+      return toast.error('Password tidak sama');
     }
 
     if (!pass1 || !pass2) {
-      return toast.error("Password tidak boleh kosong");
+      return toast.error('Password tidak boleh kosong');
     }
 
     updatePassword(pass1)
       .then(() => {
-        toast.success("Password berhasil diganti");
+        toast.success('Password berhasil diganti');
       })
       .catch((err) => {
         console.log(err);
-        if (err.code === "auth/requires-recent-login") {
-          toast.error("Mohon login ulang");
+        if (err.code === 'auth/requires-recent-login') {
+          toast.error('Mohon login ulang');
         }
       });
   }
@@ -57,10 +57,7 @@ export default function ChangePassword() {
             </div>
 
             <div className="text-center mt-10">
-              <button
-                className="py-2 px-4 bg-red-400 text-white font-bold rounded-lg"
-                onClick={handlePass}
-              >
+              <button className="py-2 px-4 bg-red-400 text-white font-bold rounded-lg" onClick={handlePass}>
                 Ganti Password
               </button>
             </div>
