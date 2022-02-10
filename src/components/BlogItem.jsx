@@ -4,14 +4,14 @@ import { ReactComponent as View } from '../assets/view.svg';
 import { ReactComponent as Edit } from '../assets/edit.svg';
 import { ReactComponent as Delete } from '../assets/delete.svg';
 import { Link } from 'react-router-dom';
-import { deleteBlogPost } from '../services/firestore';
+import { deleteNewsPost } from '../services/firestore';
 import { toast } from 'react-toastify';
 
 function BlogItem(props) {
   const [onAlert, setOnAlert] = useState(false);
 
   function handleDelete(url) {
-    deleteBlogPost(url).then(toast.error('Berhasil dihapus'));
+    deleteNewsPost(url).then(toast.error('Berhasil dihapus'));
     props.handleUpdate();
   }
 
@@ -30,9 +30,6 @@ function BlogItem(props) {
     'Desember',
   ];
   const date = new Date(props.date);
-  const dateStr = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
-
-  const timeStr = `${date.getHours()}:${date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes()}`;
 
   return (
     <div className="blog-item flex justify-between items-center border-b py-4 relative">
@@ -43,7 +40,7 @@ function BlogItem(props) {
         ></div>
         <div className="flex-grow">
           <h3 className="font-bold text-lg my-0">{props.title}</h3>
-          {/* {props.isPublished ? (
+          {props.isPublished ? (
             <small className="inline-block py-1 px-3 mb-3 mt-1 rounded-full bg-green-400 font-bold text-white">
               Publik
             </small>
@@ -51,9 +48,9 @@ function BlogItem(props) {
             <small className="inline-block py-1 px-3 mb-3 mt-1 rounded-full bg-gray-400 font-bold text-white">
               Private
             </small>
-          )} */}
+          )}
 
-          <small className="block">{`${dateStr} - ${timeStr}`}</small>
+          <small className="block">{date.toDateString()}</small>
         </div>
       </div>
       <div className="flex items-center gap-6">
@@ -61,7 +58,7 @@ function BlogItem(props) {
           <View />
         </a>
 
-        <Link to={`/edit/${props.slug}`} className="py-2 px-2">
+        <Link to={`/edit/${props.id}`} className="py-2 px-2">
           <Edit />
         </Link>
 

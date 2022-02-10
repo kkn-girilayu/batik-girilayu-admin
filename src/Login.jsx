@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { ReactComponent as Logo } from "./assets/logo.svg";
-import { useAuth } from "./contexts/AuthProvider";
-import { useHistory } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import logo from './assets/logo.png';
+import { useAuth } from './contexts/AuthProvider';
+import { useHistory } from 'react-router-dom';
 
 function Login(props) {
   const { login, currentUser } = useAuth();
@@ -10,18 +10,18 @@ function Login(props) {
   const [loading, setLoading] = useState(false);
 
   const [loginForm, setLoginForm] = useState({
-    email: "",
-    pass: "",
+    email: '',
+    pass: '',
   });
 
   function handleChange(e, field) {
     const currForm = { ...loginForm };
     switch (field) {
-      case "email":
+      case 'email':
         currForm.email = e.target.value;
         setLoginForm(currForm);
         break;
-      case "pass":
+      case 'pass':
         currForm.pass = e.target.value;
         setLoginForm(currForm);
         break;
@@ -39,7 +39,7 @@ function Login(props) {
     try {
       await login(loginForm.email, loginForm.pass);
       setLoading(false);
-      history.push("/dashboard");
+      history.push('/berita');
     } catch (err) {
       setLoading(false);
       setError(err.message);
@@ -51,14 +51,14 @@ function Login(props) {
 
   useEffect(() => {
     if (currentUser) {
-      history.push("/dashboard");
+      history.push('/berita');
     }
   }, [currentUser, history]);
 
   return (
     <div className="flex items-center justify-center h-screen w-full bg-gray-100 relative z-20">
       <div className="w-2/4 max-w-xl shadow-lg rounded-lg mx-auto px-10 py-10 bg-white">
-        <Logo />
+        <img src={logo} className="block mx-auto h-16 mb-8" />
         {error && (
           <div className="py-4 text-center bg-red-500 text-white rounded-lg mb-6">
             <p>{error}</p>
@@ -72,7 +72,7 @@ function Login(props) {
           <input
             type="email"
             onChange={(e) => {
-              handleChange(e, "email");
+              handleChange(e, 'email');
             }}
             value={loginForm.email}
             className="block w-full rounded-lg focus:shadow-lg hover:shadow-lg focus:outline-none border-2 border-gray-400 focus:border-red-500 mb-8 py-1 px-2 transition animation-150"
@@ -83,7 +83,7 @@ function Login(props) {
           <input
             type="password"
             onChange={(e) => {
-              handleChange(e, "pass");
+              handleChange(e, 'pass');
             }}
             value={loginForm.pass}
             className="block w-full rounded-lg focus:shadow-lg hover:shadow-lg focus:outline-none border-2 border-gray-400 focus:border-red-500 mb-8 py-1 px-2 transition animation-150"

@@ -21,7 +21,7 @@ function Dashboard(props) {
     const db = firebase.firestore();
 
     async function getData() {
-      const blogPost = await db.collection('berita').orderBy('tanggal', 'desc').get();
+      const blogPost = await db.collection('berita').orderBy('publishTime', 'desc').get();
       setPostData(blogPost.docs.map((doc) => doc.data()));
     }
     getData();
@@ -31,7 +31,7 @@ function Dashboard(props) {
     <>
       {currentUser ? (
         <DashboardWindow>
-          <h1 className="font-bold text-3xl mb-8">Postingan Blog</h1>
+          <h1 className="font-bold text-3xl mb-8">Postingan Berita</h1>
 
           <div className="w-full border border-gray-300 py-3 px-3 rounded-lg">
             {postData.length === 0 ? (
@@ -42,10 +42,13 @@ function Dashboard(props) {
               <>
                 {postData.map((blog) => (
                   <BlogItem
-                    key={blog.slug}
-                    title={blog.judul}
-                    date={blog.tanggal}
-                    imgUrl={blog.gambarUrl}
+                    key={blog.id}
+                    id={blog.id}
+                    slug={blog.slug}
+                    isPublished={blog.isPublished}
+                    title={blog.title}
+                    date={blog.publishTime}
+                    imgUrl={blog.imgUrl}
                     handleUpdate={handleUpdate}
                   />
                 ))}

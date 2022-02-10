@@ -1,15 +1,15 @@
-import { BrowserRouter as Router, Redirect, Route } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import Buat from "./Buat";
-import ChangePassword from "./ChangePassword";
-import { AuthProvider } from "./contexts/AuthProvider";
+import { BrowserRouter as Router, Redirect, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Buat from './Buat';
+import ChangePassword from './ChangePassword';
+import { AuthProvider } from './contexts/AuthProvider';
 
-import Dashboard from "./Dashboard";
-import Edit from "./Edit";
-import EditProfile from "./EditProfile";
-import Login from "./Login";
-import SideMenu from "./SideMenu";
+import Dashboard from './Dashboard';
+import Edit from './Edit';
+import EditProfile from './EditProfile';
+import Login from './Login';
+import SideMenu from './SideMenu';
 
 function App() {
   return (
@@ -28,7 +28,7 @@ function App() {
 
           <div className="">
             <SideMenu />
-            <Route path="/dashboard" exact>
+            <Route path="/berita" exact>
               <Dashboard />
             </Route>
             <Route path="/edit/:id" exact>

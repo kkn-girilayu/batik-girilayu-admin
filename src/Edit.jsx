@@ -1,46 +1,48 @@
-import React, { useState, useRef, useEffect } from "react";
-import firebase from "firebase";
-import "firebase/storage";
-import { useParams, Redirect } from "react-router-dom";
-import { useAuth } from "./contexts/AuthProvider";
+import React, { useState, useRef, useEffect } from 'react';
+import firebase from 'firebase';
+import 'firebase/storage';
+import { useParams, Redirect } from 'react-router-dom';
+import { useAuth } from './contexts/AuthProvider';
 
-import DashboardWindow from "./DashboardWindow";
-import EditorJs from "react-editor-js";
-import Header from "@editorjs/header";
-import List from "@editorjs/list";
+import DashboardWindow from './DashboardWindow';
+import EditorJs from 'react-editor-js';
+import Header from '@editorjs/header';
+import List from '@editorjs/list';
 // import Table from "@editorjs/table";
-import ImageTool from "@editorjs/image";
-import DatePicker from "react-datepicker";
-import Switch from "react-switch";
-import { toast } from "react-toastify";
-import * as FirebaseServices from "./services/firestore";
-import "react-datepicker/dist/react-datepicker.css";
+import ImageTool from '@editorjs/image';
+import DatePicker from 'react-datepicker';
+import Switch from 'react-switch';
+import { toast } from 'react-toastify';
+import * as FirebaseServices from './services/firestore';
+import 'react-datepicker/dist/react-datepicker.css';
 
 function Edit(props) {
   const { currentUser } = useAuth();
   const { id } = useParams();
-  const [loadState, setLoadState] = useState("Loading...");
+  const [loadState, setLoadState] = useState('Loading...');
   const [postData, setPostData] = useState([]);
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState('');
   const [date, setDate] = useState(new Date());
   const [published, setPublished] = useState(false);
-  const [excerpt, setExcerpt] = useState("");
+  const [excerpt, setExcerpt] = useState('');
   const [lastEdit, setLastEdit] = useState(new Date());
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState('');
   const [image, setImage] = useState(null);
   const [imgPreview, setImgPreview] = useState(null);
   const [expanded, setExpanded] = useState(false);
   const editorRef = useRef(null);
   const storage = firebase.storage();
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   useEffect(() => {
     const db = firebase.firestore();
 
     async function getData() {
-      const blogPost = await db.collection("blog").doc(id).get();
+      const blogPost = await db.collection('berita').doc(id).get();
 
       if (blogPost.data() === undefined) {
-        setLoadState("Post tidak ditemukan!");
+        setLoadState('Berita tidak ditemukan!');
         return;
       }
       setPostData(blogPost.data());
@@ -64,11 +66,9 @@ function Edit(props) {
         uploader: {
           async uploadByFile(file) {
             var storageRef = storage.ref();
-            var imagesRef = storageRef
-              .child("post-assets")
-              .child("images/" + file.name);
+            var imagesRef = storageRef.child('post-assets').child('images/' + file.name);
             var uploadTask = await imagesRef.put(file);
-            console.log("Uploaded successfully!", uploadTask);
+            console.log('Uploaded successfully!', uploadTask);
             const downloadURL = await uploadTask.ref.getDownloadURL();
             console.log(downloadURL);
             return {
@@ -84,60 +84,60 @@ function Edit(props) {
   };
 
   async function handleSave() {
+    if (isSubmitting) return;
     if (!title) {
-      toast.error("Judul tidak boleh kosong!");
+      toast.error('Judul tidak boleh kosong!');
       return;
     }
+
+    setIsSubmitting(true);
 
     const savedData = await editorRef.current.save();
 
     const strippedTitle = title
-      .replace(/[^a-zA-Z ]/g, "")
-      .replace(/\s+/g, "-")
+      .replace(/[^a-zA-Z ]/g, '')
+      .replace(/\s+/g, '-')
       .toLowerCase();
 
     savedData.isPublished = published;
     savedData.publishTime = date.valueOf();
     savedData.title = title;
-    savedData.path = strippedTitle;
+    savedData.slug = strippedTitle;
     savedData.id = postData.id;
     savedData.excerpt = excerpt;
-    savedData.category = category;
+    savedData.author = currentUser.uid;
 
     if (image !== null) {
-      const uploadTask = storage.ref(`blog/${image.name}`).put(image);
+      const uploadTask = storage.ref(`berita/${image.name}`).put(image);
       uploadTask.on(
-        "state_changed",
+        'state_changed',
         (snapshot) => {},
         (error) => {
           console.log(error);
         },
         () => {
           storage
-            .ref("blog")
+            .ref('berita')
             .child(image.name)
             .getDownloadURL()
             .then((url) => {
               savedData.imgUrl = url;
               console.log(savedData);
-              FirebaseServices.updateBlogPost(savedData).then(() =>
-                toast.success("Post berhasil disimpan!")
-              );
+              setIsSubmitting(false);
+              FirebaseServices.updateNewsPost(savedData).then(() => toast.success('Berita berhasil disimpan!'));
             });
         }
       );
     } else if (postData.imgUrl) {
       savedData.imgUrl = postData.imgUrl;
       console.log(savedData);
-      FirebaseServices.updateBlogPost(savedData).then(() =>
-        toast.success("Post berhasil disimpan!")
-      );
+      setIsSubmitting(false);
+      FirebaseServices.updateNewsPost(savedData).then(() => toast.success('Berita berhasil disimpan!'));
     } else {
-      savedData.imgUrl = "";
+      savedData.imgUrl = '';
       console.log(savedData);
-      FirebaseServices.updateBlogPost(savedData).then(() =>
-        toast.success("Post berhasil disimpan!")
-      );
+      setIsSubmitting(false);
+      FirebaseServices.updateNewsPost(savedData).then(() => toast.success('Berita berhasil disimpan!'));
     }
   }
 
@@ -168,78 +168,70 @@ function Edit(props) {
   }
 
   const months = [
-    "Januari",
-    "Februari",
-    "Maret",
-    "April",
-    "Mei",
-    "Juni",
-    "Juli",
-    "Agustus",
-    "September",
-    "Oktober",
-    "November",
-    "Desember",
+    'Januari',
+    'Februari',
+    'Maret',
+    'April',
+    'Mei',
+    'Juni',
+    'Juli',
+    'Agustus',
+    'September',
+    'Oktober',
+    'November',
+    'Desember',
   ];
 
   const timeStr = `${lastEdit.getHours()}:${
-    lastEdit.getMinutes() < 10
-      ? `0${lastEdit.getMinutes()}`
-      : lastEdit.getMinutes()
+    lastEdit.getMinutes() < 10 ? `0${lastEdit.getMinutes()}` : lastEdit.getMinutes()
   }`;
 
   return (
     <>
       {currentUser ? (
         <DashboardWindow>
-          <h1 className="font-bold text-xl text-center mb-8">Edit Post</h1>
+          <h1 className="font-bold text-xl text-center mb-8">Edit Berita</h1>
           {!postData.blocks || postData === undefined ? (
             <>
               <p className="text-center py-10 font-bold">{loadState}</p>
             </>
           ) : (
             <>
-              <div style={{ maxWidth: "750px" }}>
+              <div style={{ maxWidth: '750px' }}>
                 <input
                   type="text"
-                  placeholder="Judul post"
+                  placeholder="Judul berita"
                   className="block w-full focus:outline-none text-2xl mb-2 font-bold text-red-500"
                   required
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                 />
                 <small className="block mb-4 text-gray-400">
-                  Terakhir diedit:{" "}
-                  {`${lastEdit.getDate()} ${
-                    months[lastEdit.getMonth()]
-                  } ${lastEdit.getFullYear()} - ${timeStr}`}
+                  Terakhir diedit:{' '}
+                  {`${lastEdit.getDate()} ${months[lastEdit.getMonth()]} ${lastEdit.getFullYear()} - ${timeStr}`}
                 </small>
                 <div className="shadow-lg w-full rounded-lg border border-gray-200 pt-4">
-                  <EditorJs
-                    tools={tools}
-                    instanceRef={(instance) => (editorRef.current = instance)}
-                    data={postData}
-                  />
+                  <EditorJs tools={tools} instanceRef={(instance) => (editorRef.current = instance)} data={postData} />
                 </div>
               </div>
 
               <div
                 className={`fixed flex bg-white shadow-2xl rounded-lg border border-gray-200 top-4 bottom-4 right-4 z-10 overflow-hidden transition duration-200 ease-in-out ${
-                  expanded ? "post-menu-expanded" : "post-menu-minimized"
+                  expanded ? 'post-menu-expanded' : 'post-menu-minimized'
                 }`}
               >
                 <div
                   className="relative border-r border-gray-300 cursor-pointer flex flex-col items-center justify-center bg-red-400 hover:bg-red-500 transition duration-150 ease-in-out"
-                  style={{ height: "100%", width: "4rem" }}
+                  style={{ height: '100%', width: '4rem' }}
                   onClick={() => setExpanded(!expanded)}
                 >
                   <p className="absolute post-menu-text font-bold text-white">
-                    {expanded ? "Tutup menu" : "Buka menu"}
+                    {expanded ? 'Tutup menu' : 'Buka menu'}
                   </p>
                 </div>
                 <div
                   className={`bg-white flex flex-col gap-4 mb-4 py-4 px-8 overflow-y-scroll `}
-                  style={{ width: "25rem", height: "100%" }}
+                  style={{ width: '25rem', height: '100%' }}
                 >
                   <div className="">
                     <h4 className="mb-2">Tanggal</h4>
@@ -254,20 +246,13 @@ function Edit(props) {
 
                   <div className="">
                     <h4 className="mb-2">Publish</h4>
-                    <Switch
-                      checked={published}
-                      onChange={() => setPublished(!published)}
-                    />
+                    <Switch checked={published} onChange={() => setPublished(!published)} />
                   </div>
 
                   <div className="">
-                    <h4 className="mb-2">Gambar Post</h4>
+                    <h4 className="mb-2">Gambar Berita</h4>
                     {imgOutput()}
-                    <input
-                      type="file"
-                      name="thumbnail"
-                      onChange={handleImgChange}
-                    />
+                    <input type="file" name="thumbnail" onChange={handleImgChange} />
                   </div>
 
                   <div className="">
@@ -280,28 +265,16 @@ function Edit(props) {
                       onChange={handleExcerptChange}
                     ></textarea>
                   </div>
-
-                  <div className="">
-                    <h4 className="mb-2">Kategori</h4>
-                    <input
-                      type="text"
-                      className="w-full py-1 px-2 border border-gray-500 rounded-lg"
-                      value={category}
-                      onChange={handleCatChange}
-                    />
-                  </div>
                 </div>
               </div>
-              <div
-                className="text-center mt-10 cursor-pointer"
-                style={{ maxWidth: "750px" }}
-              >
-                <div
-                  className="inline-block bg-red-400 hover:bg-red-500 transition duration-150 ease-in-out py-3 px-5 rounded-lg text-white font-bold"
-                  onClick={handleSave}
+              <div className="text-center mt-10 cursor-pointer" style={{ maxWidth: '750px' }}>
+                <button
+                  className={`inline-block bg-red-400 hover:bg-red-500 disabled transition duration-150 ease-in-out py-3 px-5 rounded-lg text-white font-bold`}
+                  onClick={isSubmitting ? null : handleSave}
+                  disabled={isSubmitting}
                 >
                   Simpan
-                </div>
+                </button>
               </div>
             </>
           )}

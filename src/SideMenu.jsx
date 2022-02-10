@@ -1,8 +1,8 @@
-import React from "react";
-import { Link, NavLink } from "react-router-dom";
-import { toast } from "react-toastify";
-import { ReactComponent as Logo } from "./assets/logo.svg";
-import { useAuth } from "./contexts/AuthProvider";
+import React from 'react';
+import { Link, NavLink } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import logo from './assets/logo.png';
+import { useAuth } from './contexts/AuthProvider';
 
 function SideMenu(props) {
   const { logout } = useAuth();
@@ -17,12 +17,9 @@ function SideMenu(props) {
   }
 
   return (
-    <div
-      className="w-1/5 bg-blue-50 h-screen text-center py-14"
-      style={{ position: "fixed", top: 0 }}
-    >
-      <Link to="/dashboard">
-        <Logo />
+    <div className="w-1/5 bg-blue-50 h-screen text-center py-14" style={{ position: 'fixed', top: 0 }}>
+      <Link to="/berita">
+        <img src={logo} className="h-16 block mx-auto mb-8" />
       </Link>
 
       <div className="py-8">
@@ -36,29 +33,12 @@ function SideMenu(props) {
 
       <ul className="mt-10">
         <li className="mb-4">
-          <NavLink
-            className="text-gray-500"
-            activeClassName="font-bold text-gray-600"
-            to="/dashboard"
-          >
-            Dashboard
+          <NavLink className="text-gray-500" activeClassName="font-bold text-gray-600" to="/berita">
+            Berita
           </NavLink>
         </li>
         <li className="mb-4">
-          <NavLink
-            className="text-gray-500"
-            activeClassName="font-bold text-gray-600"
-            to="/edit-profile"
-          >
-            Edit Profile
-          </NavLink>
-        </li>
-        <li className="mb-4">
-          <NavLink
-            className="text-gray-500"
-            activeClassName="font-bold text-gray-600"
-            to="/ganti-password"
-          >
+          <NavLink className="text-gray-500" activeClassName="font-bold text-gray-600" to="/ganti-password">
             Ganti Password
           </NavLink>
         </li>
