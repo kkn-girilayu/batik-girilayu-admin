@@ -26,7 +26,6 @@ function Edit(props) {
   const [published, setPublished] = useState(false);
   const [excerpt, setExcerpt] = useState('');
   const [lastEdit, setLastEdit] = useState(new Date());
-  const [category, setCategory] = useState('');
   const [image, setImage] = useState(null);
   const [imgPreview, setImgPreview] = useState(null);
   const [expanded, setExpanded] = useState(false);
@@ -51,7 +50,6 @@ function Edit(props) {
       setDate(new Date(blogPost.data().publishTime));
       setExcerpt(blogPost.data().excerpt);
       setLastEdit(new Date(blogPost.data().lastEdit));
-      setCategory(blogPost.data().category);
     }
     getData();
   }, [id]);
@@ -161,10 +159,6 @@ function Edit(props) {
   function handleExcerptChange(e) {
     setExcerpt(e.target.value);
     console.log(excerpt);
-  }
-  function handleCatChange(e) {
-    setCategory(e.target.value);
-    console.log(category);
   }
 
   const months = [

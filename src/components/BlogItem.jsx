@@ -15,20 +15,6 @@ function BlogItem(props) {
     props.handleUpdate();
   }
 
-  const months = [
-    'Januari',
-    'Februari',
-    'Maret',
-    'April',
-    'Mei',
-    'Juni',
-    'Juli',
-    'Agustus',
-    'September',
-    'Oktober',
-    'November',
-    'Desember',
-  ];
   const date = new Date(props.date);
 
   return (

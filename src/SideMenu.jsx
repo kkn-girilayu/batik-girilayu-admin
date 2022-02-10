@@ -19,7 +19,7 @@ function SideMenu(props) {
   return (
     <div className="w-1/5 bg-blue-50 h-screen text-center py-14" style={{ position: 'fixed', top: 0 }}>
       <Link to="/berita">
-        <img src={logo} className="h-16 block mx-auto mb-8" />
+        <img src={logo} className="h-16 block mx-auto mb-8" alt="Logo Batik Girilayu" />
       </Link>
 
       <div className="py-8">

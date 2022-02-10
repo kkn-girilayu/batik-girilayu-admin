@@ -58,7 +58,7 @@ function Login(props) {
   return (
     <div className="flex items-center justify-center h-screen w-full bg-gray-100 relative z-20">
       <div className="w-2/4 max-w-xl shadow-lg rounded-lg mx-auto px-10 py-10 bg-white">
-        <img src={logo} className="block mx-auto h-16 mb-8" />
+        <img src={logo} className="block mx-auto h-16 mb-8" alt="Logo Batik Girilayu" />
         {error && (
           <div className="py-4 text-center bg-red-500 text-white rounded-lg mb-6">
             <p>{error}</p>
