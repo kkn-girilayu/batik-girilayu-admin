@@ -40,7 +40,12 @@ function BlogItem(props) {
         </div>
       </div>
       <div className="flex items-center gap-6">
-        <a href={`${process.env.WEB_URL}berita/${props.slug}`} target="_blank" rel="noreferrer" className="py-2 px-2">
+        <a
+          href={`${process.env.REACT_APP_WEB_URL}berita/${props.slug}`}
+          target="_blank"
+          rel="noreferrer"
+          className="py-2 px-2"
+        >
           <View />
         </a>
 
