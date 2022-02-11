@@ -66,7 +66,7 @@ function BlogItem(props) {
               </button>
               <button
                 className="bg-red-500 hover:bg-red-400 transition duration-150 ease-in-out py-1.5 px-6 rounded-lg text-white font-bold"
-                onClick={() => handleDelete(props.slug)}
+                onClick={() => handleDelete(props.id)}
               >
                 Hapus
               </button>
