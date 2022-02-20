@@ -40,6 +40,34 @@ export const getNewsPost = () => {
   return db.collection('berita').orderBy('time', 'desc').get();
 };
 
+export const createCataloguePost = (item) => {
+  return db
+    .collection('katalog')
+    .doc(item.id)
+    .set({
+      ...item,
+      lastEdit: new Date().valueOf(),
+    });
+};
+
+export const updateCataloguePost = (item) => {
+  return db
+    .collection('katalog')
+    .doc(item.id)
+    .set({
+      ...item,
+      lastEdit: new Date().valueOf(),
+    });
+};
+
+export const deleteCataloguePost = (id) => {
+  return db.collection('katalog').doc(id).delete();
+};
+
+export const getCataloguePost = () => {
+  return db.collection('katalog').orderBy('time', 'desc').get();
+};
+
 export function updateProfile(uid, item) {
   return db.collection('admin').doc(uid).set(item);
 }
