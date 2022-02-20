@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import DashboardWindow from './DashboardWindow';
+import { deleteNewsPost } from './services/firestore';
+import { toast } from 'react-toastify';
 
 import firebase from 'firebase';
 import BlogItem from './components/BlogItem';
@@ -10,12 +12,6 @@ import { useAuth } from './contexts/AuthProvider';
 function Dashboard(props) {
   const { currentUser } = useAuth();
   const [postData, setPostData] = useState([]);
-
-  function handleUpdate() {
-    setTimeout(() => {
-      window.location.reload(false);
-    }, 2000);
-  }
 
   useEffect(() => {
     const db = firebase.firestore();
@@ -49,7 +45,14 @@ function Dashboard(props) {
                     title={blog.title}
                     date={blog.publishTime}
                     imgUrl={blog.imgUrl}
-                    handleUpdate={handleUpdate}
+                    editPath="edit"
+                    webPath="berita"
+                    onDelete={(id) => {
+                      deleteNewsPost(id).then(toast.error('Berhasil dihapus'));
+                      setTimeout(() => {
+                        window.location.reload(false);
+                      }, 2000);
+                    }}
                   />
                 ))}
               </>

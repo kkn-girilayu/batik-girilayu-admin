@@ -4,16 +4,10 @@ import { ReactComponent as View } from '../assets/view.svg';
 import { ReactComponent as Edit } from '../assets/edit.svg';
 import { ReactComponent as Delete } from '../assets/delete.svg';
 import { Link } from 'react-router-dom';
-import { deleteNewsPost } from '../services/firestore';
-import { toast } from 'react-toastify';
+import { formatCurrency } from '../lib/helpers';
 
 function BlogItem(props) {
   const [onAlert, setOnAlert] = useState(false);
-
-  function handleDelete(url) {
-    deleteNewsPost(url).then(toast.error('Berhasil dihapus'));
-    props.handleUpdate();
-  }
 
   const date = new Date(props.date);
 
@@ -24,7 +18,7 @@ function BlogItem(props) {
           className="post-thumb w-52 h-28 flex-shrink-0 bg-gray-300 rounded-md"
           style={{ backgroundImage: `url(${props.imgUrl})` }}
         ></div>
-        <div className="flex-grow">
+        <div className="flex-grow self-start">
           <h3 className="font-bold text-lg my-0">{props.title}</h3>
           {props.isPublished ? (
             <small className="inline-block py-1 px-3 mb-3 mt-1 rounded-full bg-green-400 font-bold text-white">
@@ -36,12 +30,21 @@ function BlogItem(props) {
             </small>
           )}
 
-          <small className="block">{date.toDateString()}</small>
+          <small className="block">{props.date ? date.toDateString() : null}</small>
+
+          {props.normalPrice && props.discountPrice ? (
+            <>
+              <small className="block line-through"> {formatCurrency(props.normalPrice)}</small>
+              <small className="block"> {formatCurrency(props.discountPrice)}</small>
+            </>
+          ) : props.normalPrice ? (
+            <small className="block"> {formatCurrency(props.normalPrice)}</small>
+          ) : null}
         </div>
       </div>
       <div className="flex items-center gap-6">
         <a
-          href={`${process.env.REACT_APP_WEB_URL}berita/${props.slug}`}
+          href={`${process.env.REACT_APP_WEB_URL}${props.webPath}/${props.slug}`}
           target="_blank"
           rel="noreferrer"
           className="py-2 px-2"
@@ -49,7 +52,7 @@ function BlogItem(props) {
           <View />
         </a>
 
-        <Link to={`/edit/${props.id}`} className="py-2 px-2">
+        <Link to={`/${props.editPath}/${props.id}`} className="py-2 px-2">
           <Edit />
         </Link>
 
@@ -71,7 +74,7 @@ function BlogItem(props) {
               </button>
               <button
                 className="bg-red-500 hover:bg-red-400 transition duration-150 ease-in-out py-1.5 px-6 rounded-lg text-white font-bold"
-                onClick={() => handleDelete(props.id)}
+                onClick={() => props.onDelete(props.id)}
               >
                 Hapus
               </button>

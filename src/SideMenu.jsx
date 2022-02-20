@@ -22,12 +22,18 @@ function SideMenu(props) {
         <img src={logo} className="h-16 block mx-auto mb-8" alt="Logo Batik Girilayu" />
       </Link>
 
-      <div className="py-8">
+      <div className="p-8">
         <Link
           to="/buat"
-          className="bg-red-400 hover:bg-red-500 transition duration-150 ease-in-out py-3 px-5 rounded-lg text-white font-bold"
+          className="bg-red-400 hover:bg-red-500 block mb-4 transition duration-150 ease-in-out py-3 px-5 rounded-lg text-white font-bold"
         >
-          Buat posting baru
+          Buat berita baru
+        </Link>
+        <Link
+          to="/buat-produk"
+          className="bg-green-400 hover:bg-green-500 block transition duration-150 ease-in-out py-3 px-5 rounded-lg text-white font-bold"
+        >
+          Buat produk baru
         </Link>
       </div>
 
@@ -35,6 +41,11 @@ function SideMenu(props) {
         <li className="mb-4">
           <NavLink className="text-gray-500" activeClassName="font-bold text-gray-600" to="/berita">
             Berita
+          </NavLink>
+        </li>
+        <li className="mb-4">
+          <NavLink className="text-gray-500" activeClassName="font-bold text-gray-600" to="/produk">
+            Produk
           </NavLink>
         </li>
         <li className="mb-4">
