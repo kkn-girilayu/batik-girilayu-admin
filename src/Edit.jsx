@@ -68,7 +68,6 @@ function Edit(props) {
             var uploadTask = await imagesRef.put(file);
             console.log('Uploaded successfully!', uploadTask);
             const downloadURL = await uploadTask.ref.getDownloadURL();
-            console.log(downloadURL);
             return {
               success: 1,
               file: {
@@ -120,7 +119,6 @@ function Edit(props) {
             .getDownloadURL()
             .then((url) => {
               savedData.imgUrl = url;
-              console.log(savedData);
               setIsSubmitting(false);
               FirebaseServices.updateNewsPost(savedData).then(() => toast.success('Berita berhasil disimpan!'));
             });
@@ -128,12 +126,10 @@ function Edit(props) {
       );
     } else if (postData.imgUrl) {
       savedData.imgUrl = postData.imgUrl;
-      console.log(savedData);
       setIsSubmitting(false);
       FirebaseServices.updateNewsPost(savedData).then(() => toast.success('Berita berhasil disimpan!'));
     } else {
       savedData.imgUrl = '';
-      console.log(savedData);
       setIsSubmitting(false);
       FirebaseServices.updateNewsPost(savedData).then(() => toast.success('Berita berhasil disimpan!'));
     }
@@ -158,7 +154,6 @@ function Edit(props) {
 
   function handleExcerptChange(e) {
     setExcerpt(e.target.value);
-    console.log(excerpt);
   }
 
   const months = [

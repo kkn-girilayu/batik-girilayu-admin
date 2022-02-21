@@ -44,8 +44,6 @@ export default function EditProfile() {
   }
 
   async function handleSave() {
-    console.log(userData);
-
     if (img !== null) {
       const uploadTask = storage.ref(`admin/${img.name}`).put(img);
       uploadTask.on(
@@ -60,7 +58,6 @@ export default function EditProfile() {
             .child(img.name)
             .getDownloadURL()
             .then((url) => {
-              console.log(url);
               const dataUpload = { ...userData };
               dataUpload.img = url;
               updateProfile(currentUser.uid, dataUpload)

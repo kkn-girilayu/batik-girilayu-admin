@@ -33,7 +33,6 @@ function Login(props) {
 
   async function handleLogin(e) {
     e.preventDefault();
-    console.log(loginForm);
     setLoading(true);
 
     try {

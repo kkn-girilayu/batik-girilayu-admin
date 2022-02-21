@@ -33,7 +33,6 @@ function Buat(props) {
             var uploadTask = await imagesRef.put(file);
             console.log('Uploaded successfully!', uploadTask);
             const downloadURL = await uploadTask.ref.getDownloadURL();
-            console.log(downloadURL);
             return {
               success: 1,
               file: {
