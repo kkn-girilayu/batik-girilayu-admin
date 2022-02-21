@@ -43,7 +43,7 @@ function ProdukPage() {
                     slug={blog.slug}
                     isPublished={blog.isPublished}
                     title={blog.title}
-                    imgUrl={blog.images[0].thumbnail}
+                    imgUrl={blog?.images[0]?.thumbnail}
                     normalPrice={blog.normalPrice}
                     discountPrice={blog.discountPrice}
                     editPath="edit-produk"
