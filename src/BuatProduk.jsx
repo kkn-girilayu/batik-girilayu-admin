@@ -32,7 +32,6 @@ function BuatProduk() {
             var uploadTask = await imagesRef.put(file);
             console.log('Uploaded successfully!', uploadTask);
             const downloadURL = await uploadTask.ref.getDownloadURL();
-            console.log(downloadURL);
             return {
               success: 1,
               file: {
@@ -106,7 +105,6 @@ function BuatProduk() {
                 imgInsert.push({ original: url, thumbnail: url, filename: img.name });
 
                 if (idx + 1 === image.length) {
-                  console.log(imgInsert);
                   savedData.images = imgInsert;
                   FirebaseServices.createCataloguePost(savedData).then(() => {
                     toast.success('Produk berhasil disimpan!');
@@ -128,8 +126,12 @@ function BuatProduk() {
 
   function handleImgChange(e) {
     if (e.target.files[0]) {
-      setImage([...image, e.target.files[0]]);
-      setImgPreview([...imgPreview, URL.createObjectURL(e.target.files[0])]);
+      if (e.target.files[0].size < 2097152) {
+        setImage([...image, e.target.files[0]]);
+        setImgPreview([...imgPreview, URL.createObjectURL(e.target.files[0])]);
+      } else {
+        toast.error('Ukuran file terlalu besar!');
+      }
     }
   }
 
@@ -214,7 +216,8 @@ function BuatProduk() {
               </div>
 
               <div className="">
-                <h4 className="mb-2">Gambar Produk</h4>
+                <h4 className=" mb-0">Gambar Produk</h4>
+                <small className="block mb-4">Ukuran gambar maksimal 2MB</small>
 
                 {imgPreview.map((img, idx) => (
                   <div key={idx * 100} className="flex shadow-md rounded-xl p-4 border-gray-200 border mb-3">
