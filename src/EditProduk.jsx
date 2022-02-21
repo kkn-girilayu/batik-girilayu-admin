@@ -80,7 +80,6 @@ function EditProduk() {
             var uploadTask = await imagesRef.put(file);
             console.log('Uploaded successfully!', uploadTask);
             const downloadURL = await uploadTask.ref.getDownloadURL();
-            console.log(downloadURL);
             return {
               success: 1,
               file: {
@@ -120,12 +119,12 @@ function EditProduk() {
     savedData.author = currentUser.uid;
 
     if (imgChanged && image.length > 0) {
-      if (postData.images) {
-        const oldImg = postData.images;
-        oldImg.forEach((img) => {
-          storage.ref(`katalog/${img.filename}`).delete();
-        });
-      }
+      // if (postData.images) {
+      //   const oldImg = postData.images;
+      //   oldImg.forEach((img) => {
+      //     storage.ref(`katalog/${img.filename}`).delete();
+      //   });
+      // }
 
       const imgInsert = [];
       image.forEach((img, idx) => {
@@ -144,8 +143,13 @@ function EditProduk() {
                 imgInsert.push({ original: url, thumbnail: url, filename: img.name });
 
                 if (idx + 1 === image.length) {
-                  console.log(imgInsert);
-                  savedData.images = imgInsert;
+                  const _images = [];
+                  if (postData.images) {
+                    _images.push(...postData.images);
+                  }
+                  _images.push(...imgInsert);
+
+                  savedData.images = _images;
                   FirebaseServices.updateCataloguePost(savedData).then(() => {
                     toast.success('Produk berhasil disimpan!');
                     setIsSubmitting(false);
@@ -172,15 +176,18 @@ function EditProduk() {
 
   function handleImgChange(e) {
     if (e.target.files[0]) {
-      setImage([...image, e.target.files[0]]);
-      setImgPreview([...imgPreview, URL.createObjectURL(e.target.files[0])]);
-      setImgChanged(true);
+      if (e.target.files[0].size < 2097152) {
+        setImage([...image, e.target.files[0]]);
+        setImgPreview([...imgPreview, URL.createObjectURL(e.target.files[0])]);
+        setImgChanged(true);
+      } else {
+        toast.error('Ukuran file terlalu besar!');
+      }
     }
   }
 
   function handleExcerptChange(e) {
     setExcerpt(e.target.value);
-    console.log(excerpt);
   }
 
   function handleAddDetails() {
@@ -290,7 +297,8 @@ function EditProduk() {
                   </div>
 
                   <div className="">
-                    <h4 className="mb-2">Gambar Produk</h4>
+                    <h4 className=" mb-0">Gambar Produk</h4>
+                    <small className="block mb-4">Ukuran gambar maksimal 2MB</small>
 
                     {imgPreview.map((img, idx) => (
                       <div key={idx * 100} className="flex shadow-md rounded-xl p-4 border-gray-200 border mb-3">
